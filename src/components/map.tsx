@@ -20,6 +20,15 @@ const Map = () => {
   });
   console.log(`Datajag : ${newData.length}`);
 
+  const iconDefault = {
+    url: process.env.PUBLIC_URL + "iconOrange-32.png",
+    scaledSize: new google.maps.Size(28, 28),
+    labelOrigin: new google.maps.Point(14, 12),
+  };
+  const iconActive = {
+    url: process.env.PUBLIC_URL + "iconPink-32.png",
+    labelOrigin: new google.maps.Point(16, 13),
+  };
   const clusterStyles = [
     {
       textColor: "black",
@@ -144,7 +153,7 @@ const Map = () => {
                       key={d.latitude + d.longitude + d.jobId}
                       position={{ lat: d.latitude, lng: d.longitude }}
                       clusterer={clusterer}
-                      onClick={() => fetchDirections(d)}
+                      icon={iconDefault}
                     />
                   ))
                 }

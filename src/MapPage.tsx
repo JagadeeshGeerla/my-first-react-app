@@ -1,6 +1,7 @@
 import React from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import Map from "./components/map.tsx";
+//import MapWithMarkerClusterer from "./MapWithMarkerClusterer.tsx";
 
 const MapPage = () => {
   const { isLoaded } = useLoadScript({
