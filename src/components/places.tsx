@@ -1,6 +1,7 @@
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
+  getDetails,
 } from "use-places-autocomplete";
 import {
   Combobox,
@@ -30,7 +31,13 @@ export default function Places({ setOffice }: PlacesProps) {
     clearSuggestions();
 
     const results = await getGeocode({ address: val });
+    console.log("Bounds:" + JSON.stringify(results[0].geometry.viewport));
+
     const { lat, lng } = await getLatLng(results[0]);
+    console.log("getLatLng:" + JSON.stringify(await getLatLng(results[0])));
+
+    var bounds = await getDetails({ placeId: "ChIJGWD48W9e7ocR2VnHV0pj78Y" });
+    console.log("bounds:" + JSON.stringify(bounds));
     setOffice({ lat, lng });
   };
 

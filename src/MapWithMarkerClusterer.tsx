@@ -3,7 +3,9 @@ import {
   LoadScript,
   MarkerClusterer,
   Marker,
+  InfoWindow,
 } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
 
 const mapContainerStyle = {
   height: "400px",
@@ -11,7 +13,13 @@ const mapContainerStyle = {
 };
 
 const center = { lat: -28.024, lng: 140.887 };
+const position = { lat: -29.024, lng: 150.887 };
 
+const iconDefault = {
+  url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+  scaledSize: { width: 28, height: 28 },
+  labelOrigin: { x: 25, y: 20 },
+};
 const locations = [
   { lat: -31.56391, lng: 147.154312 },
   { lat: -33.718234, lng: 150.363181 },
@@ -37,7 +45,11 @@ const locations = [
   { lat: -42.735258, lng: 147.438 },
   { lat: -43.999792, lng: 170.463352 },
 ];
-
+const divStyle = {
+  background: `white`,
+  border: `1px solid #ccc`,
+  padding: 15,
+};
 const options = {
   imagePath:
     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
@@ -48,25 +60,69 @@ function createKey(location) {
 }
 
 const MapWithMarkerClusterer = () => {
+  const [count, setCount] = useState(1);
+  const [infoWindowPosition, setInfoWindowPosition] = useState({
+    lat: 0,
+    lng: 0,
+  });
+
+  const InfoView = (lat: number, lng: number) => {
+    console.log("info :");
+    setInfoWindowPosition({ lat: lat, lng: lng });
+    return;
+  };
+
+  // useEffect(() => {
+  //   var ann = document.getElementsByClassName("gm-style-iw-a");
+  //   console.log("fdsfd " + ann.length);
+  //   ann.style;
+  // });
+
   return (
-    <GoogleMap
-      id="marker-example"
-      mapContainerStyle={mapContainerStyle}
-      zoom={3}
-      center={center}
-    >
-      <MarkerClusterer options={options}>
-        {(clusterer) =>
-          locations.map((location) => (
-            <Marker
-              key={createKey(location)}
-              position={location}
-              clusterer={clusterer}
-            />
-          ))
-        }
-      </MarkerClusterer>
-    </GoogleMap>
+    <>
+      <button onClick={() => setCount(0)}>Click me</button>
+      <LoadScript googleMapsApiKey="AIzaSyDY54lf33Hs8JevY36HXpFqqn2kMfHcz4c">
+        <GoogleMap
+          id="marker-example"
+          mapContainerStyle={mapContainerStyle}
+          zoom={3}
+          center={center}
+        >
+          {!count && (
+            <>
+              <MarkerClusterer options={options}>
+                {(clusterer) =>
+                  locations.map((location) => (
+                    <Marker
+                      key={createKey(location)}
+                      position={location}
+                      clusterer={clusterer}
+                      icon={iconDefault}
+                      label="10"
+                    />
+                  ))
+                }
+              </MarkerClusterer>
+              {infoWindowPosition.lat && (
+                <InfoWindow
+                  position={{
+                    lat: infoWindowPosition.lat,
+                    lng: infoWindowPosition.lng,
+                  }}
+                  onCloseClick={() => {
+                    setInfoWindowPosition({ lat: 0, lng: 0 });
+                  }}
+                >
+                  <div style={divStyle}>
+                    <h1>InfoWindow</h1>
+                  </div>
+                </InfoWindow>
+              )}
+            </>
+          )}
+        </GoogleMap>
+      </LoadScript>
+    </>
   );
 };
 
